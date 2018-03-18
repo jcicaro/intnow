@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="Record Update Request" max_length="40" name="x_9260_intnow_record_update_request" type="collection">
+        <element display="true" label="Display name" max_length="100" name="display_name" type="string"/>
+        <element dependent="table" dependent_on_field="table" label="Record" max_length="32" name="record" type="document_id" use_dependent_field="true"/>
+        <element choice="1" label="State" max_length="40" name="state" type="string">
+            <choice>
+                <element label="Pending" sequence="0" value="Pending"/>
+                <element label="Completed" sequence="1" value="Completed"/>
+            </choice>
+        </element>
+        <element label="Table" max_length="80" name="table" type="table_name"/>
+        <index name="index">
+            <element name="record"/>
+        </index>
+    </element>
+</database>

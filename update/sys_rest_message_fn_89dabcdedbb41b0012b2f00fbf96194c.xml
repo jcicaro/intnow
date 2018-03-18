@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_rest_message_fn">
+    <sys_rest_message_fn action="INSERT_OR_UPDATE">
+        <authentication_type>inherit_from_parent</authentication_type>
+        <basic_auth_password/>
+        <basic_auth_profile/>
+        <basic_auth_user/>
+        <content>{&#13;
+	"fields": {&#13;
+		"project": {&#13;
+			"id": "11905"&#13;
+		},&#13;
+		"issuetype": {&#13;
+			"id": "10300"&#13;
+		},&#13;
+		"reporter": {&#13;
+			"name": "cop@ndnco.com.au"&#13;
+		},&#13;
+		"customfield_10827": "${incident.number}",&#13;
+		"customfield_10400": [2],&#13;
+		"summary": "${incident.short_description}",&#13;
+		"description": "${incident.description}"&#13;
+	}&#13;
+}</content>
+        <function_name>Issue POST</function_name>
+        <http_method>post</http_method>
+        <lock>false</lock>
+        <oauth2_profile/>
+        <protocol_name/>
+        <qualified_name>(INTNOW) Jira Issue [ Issue POST ]</qualified_name>
+        <rest_endpoint>${jira_base_url}/rest/api/2/issue</rest_endpoint>
+        <rest_message display_value="(INTNOW) Jira Issue">f3997012dbf41b0012b2f00fbf961925</rest_message>
+        <sys_class_name>sys_rest_message_fn</sys_class_name>
+        <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+        <sys_created_on>2018-03-14 09:15:53</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>89dabcdedbb41b0012b2f00fbf96194c</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Issue POST</sys_name>
+        <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+        <sys_update_name>sys_rest_message_fn_89dabcdedbb41b0012b2f00fbf96194c</sys_update_name>
+        <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+        <sys_updated_on>2018-03-14 09:18:57</sys_updated_on>
+        <use_basic_auth>false</use_basic_auth>
+        <use_mid_server/>
+        <use_mutual_auth>false</use_mutual_auth>
+    </sys_rest_message_fn>
+</record_update>

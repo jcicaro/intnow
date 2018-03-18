@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_9260_intnow.InboundHelper</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>InboundHelper</name>
+        <script><![CDATA[var InboundHelper = Class.create();
+InboundHelper.prototype = {
+    initialize: function () {
+    },
+
+    updateTarget: function(targetGr, fieldValues) {
+        var util = this;
+        var targetGrTable = targetGr.getTableName();
+        var targetGrSysId = targetGr.getValue('sys_id');
+
+        var recordUpdateReqGr = util.createGr('x_9260_intnow_record_update_request', {
+            table: targetGrTable,
+            record: targetGrSysId
+        });
+
+        for (var i in fieldValues) {
+            if (fieldValues.hasOwnProperty(i)) {
+                util.createGr('x_9260_intnow_record_update', {
+                    record_update_request: recordUpdateReqGr.getValue('sys_id'),
+                    table: targetGrTable,
+                    field: i,
+                    value: fieldValues[i]
+                });
+            }
+        }
+
+        recordUpdateReqGr.state = 'Pending';
+        recordUpdateReqGr.update();
+    },
+
+    createGr: function(table, fieldValues) {
+        var gr = new GlideRecord(table);
+        gr.initialize();
+
+        for(var i in fieldValues) {
+            if (fieldValues.hasOwnProperty(i)) {
+                gr[i] = fieldValues[i];
+            }
+        }
+
+        gr.insert();
+        return gr;
+    },
+
+    log: function (msg, logType) {
+
+        logType = logType || 'info';
+
+        if (!msg) {
+            return null;
+        }
+
+        if (this.isObject(msg) || this.isArray(msg)) {
+            msg = JSON.stringify(msg);
+        }
+
+        // msg = '[' + (new GlideDateTime().getDisplayValue()) + '] ' + msg;
+
+        gs[logType](msg);
+    },
+
+    // === Value Checks ===
+
+    isFunction: function (obj) {
+        return !!(obj && obj.constructor && obj.call && obj.apply);
+    },
+
+    isArray: function (val) {
+        return Object.prototype.toString.call(val) === '[object Array]';
+    },
+
+    isObject: function (val) {
+        return (val !== null && typeof val === 'object');
+    },
+
+    type: 'InboundHelper'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+        <sys_created_on>2018-03-15 11:46:04</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>72c6eee2dbb45b0012b2f00fbf961963</sys_id>
+        <sys_mod_count>13</sys_mod_count>
+        <sys_name>InboundHelper</sys_name>
+        <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+        <sys_update_name>sys_script_include_72c6eee2dbb45b0012b2f00fbf961963</sys_update_name>
+        <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+        <sys_updated_on>2018-03-17 02:56:17</sys_updated_on>
+    </sys_script_include>
+</record_update>

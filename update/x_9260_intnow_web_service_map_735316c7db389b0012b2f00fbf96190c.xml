@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="x_9260_intnow_web_service_map">
+    <x_9260_intnow_web_service_map action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <filter table="incident">active=true^correlation_idISEMPTY^EQ<item endquery="false" field="active" goto="false" newquery="false" operator="=" or="false" value="true"/>
+            <item endquery="false" field="correlation_id" goto="false" newquery="false" operator="ISEMPTY" or="false" value=""/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </filter>
+        <name>Demo Incident</name>
+        <on_insert>true</on_insert>
+        <on_journal_update>false</on_journal_update>
+        <on_update>true</on_update>
+        <parameter_script><![CDATA[answer = (function(source, journal, webServiceMap) {
+	var answer = {};
+	
+	gs.info('DEMO: Parameter script: ' + source.number);
+	
+	return answer;
+})(source, journal, webServiceMap);]]></parameter_script>
+        <response_handler_script><![CDATA[(function(response, source, webServiceMap, h) {
+	var responseBody = JSON.parse(response.getBody());
+	
+	h.log('DEMO: Response handler script: ' + response.getStatusCode());
+	
+	h.updateTarget(source, {
+		correlation_id: responseBody.result[0].number,
+		correlation_display: 'TEST_LOOP',
+		short_description: responseBody.result[0].short_description + ' (modified)'
+	});
+	
+})(response, source, webServiceMap, h);]]></response_handler_script>
+        <sys_class_name>x_9260_intnow_web_service_map</sys_class_name>
+        <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+        <sys_created_on>2018-03-16 23:38:18</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>735316c7db389b0012b2f00fbf96190c</sys_id>
+        <sys_mod_count>49</sys_mod_count>
+        <sys_name>Demo Incident</sys_name>
+        <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+        <sys_update_name>x_9260_intnow_web_service_map_735316c7db389b0012b2f00fbf96190c</sys_update_name>
+        <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+        <sys_updated_on>2018-03-17 22:59:43</sys_updated_on>
+        <table>incident</table>
+        <ws_message display_value="(INTNOW) Loopback">a8fe2966dbb05b0012b2f00fbf96190d</ws_message>
+        <ws_method display_value="Default GET">841f25aedb705b0012b2f00fbf961989</ws_method>
+    </x_9260_intnow_web_service_map>
+</record_update>

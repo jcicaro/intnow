@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>POST</http_method>
+        <name>comment_created</name>
+        <operation_script><![CDATA[(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+	
+	var util = new JiraUtil();
+	
+	try {
+		
+		var issueKey = request.pathParams.issue_key;
+		var commentId = request.pathParams.comment_id;
+		
+		util.addCommentToTicket(issueKey, commentId);
+		
+	} catch (error) {
+		util.log(error, 'error');
+	}
+	
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_9260_intnow/jira_incident/comment_created/{issue_key}/{comment_id}</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/comment_created/{issue_key}/{comment_id}</relative_path>
+        <request_example/>
+        <requires_acl_authorization>false</requires_acl_authorization>
+        <requires_authentication>false</requires_authentication>
+        <short_description/>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+        <sys_created_on>2018-03-14 09:05:14</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>021870dedbb41b0012b2f00fbf9619ee</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>comment_created</sys_name>
+        <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+        <sys_update_name>sys_ws_operation_021870dedbb41b0012b2f00fbf9619ee</sys_update_name>
+        <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+        <sys_updated_on>2018-03-14 09:05:38</sys_updated_on>
+        <web_service_definition display_value="Jira - Incident">50c7bc9edbb41b0012b2f00fbf961973</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

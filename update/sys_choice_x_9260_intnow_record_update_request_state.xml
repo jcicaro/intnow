@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="state" table="x_9260_intnow_record_update_request" version="3">
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>state</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Pending</label>
+            <language>en</language>
+            <name>x_9260_intnow_record_update_request</name>
+            <sequence>0</sequence>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 00:53:49</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1ac4a6cbdb789b0012b2f00fbf961949</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 00:53:49</sys_updated_on>
+            <value>Pending</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>state</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Completed</label>
+            <language>en</language>
+            <name>x_9260_intnow_record_update_request</name>
+            <sequence>1</sequence>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 00:53:49</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>5ac4a6cbdb789b0012b2f00fbf96194a</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 00:53:49</sys_updated_on>
+            <value>Completed</value>
+        </sys_choice>
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>state</element>
+            <name>x_9260_intnow_record_update_request</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 00:53:49</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_id>994d256f4fb09b002437fa218110c723</sys_id>
+            <sys_mod_count>3</sys_mod_count>
+            <sys_name>state</sys_name>
+            <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+            <sys_update_name>sys_choice_x_9260_intnow_record_update_request_state</sys_update_name>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 19:52:44</sys_updated_on>
+        </sys_choice_set>
+    </sys_choice>
+</record_update>

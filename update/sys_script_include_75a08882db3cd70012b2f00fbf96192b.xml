@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_9260_intnow.getWebServiceFunctionsRefQual</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>getWebServiceFunctionsRefQual</name>
+        <script><![CDATA[var getWebServiceFunctionsRefQual = Class.create();
+getWebServiceFunctionsRefQual.prototype = {
+    initialize: function() {
+    },
+
+	getFunctions : function(sys_id, sys_class_name) {
+		var gr = null;
+		//var results = [];
+		var results = "";
+		
+		if (sys_class_name == "sys_rest_message") {
+			gr = new GlideRecord("sys_rest_message_fn");
+			gr.addQuery("rest_message", sys_id);
+		} else {
+			gr = new GlideRecord("sys_soap_message_function");
+			gr.addQuery("soap_message", sys_id);			
+		}
+		gr.query();
+		
+		while (gr.next()) {
+			//results.push(gr.sys_id);
+			if (results.length > 0)
+				results += (',' + gr.sys_id);
+			else 
+				results = gr.sys_id + "";
+		}
+
+		return 'sys_idIN' + results.toString();
+	},	
+	
+    type: 'getWebServiceFunctionsRefQual'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+        <sys_created_on>2018-03-13 10:23:11</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>75a08882db3cd70012b2f00fbf96192b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>getWebServiceFunctionsRefQual</sys_name>
+        <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+        <sys_update_name>sys_script_include_75a08882db3cd70012b2f00fbf96192b</sys_update_name>
+        <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+        <sys_updated_on>2018-03-13 10:23:11</sys_updated_on>
+    </sys_script_include>
+</record_update>

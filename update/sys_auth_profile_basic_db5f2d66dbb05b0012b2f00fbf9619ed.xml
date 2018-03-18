@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_auth_profile_basic">
+    <sys_auth_profile_basic action="INSERT_OR_UPDATE">
+        <name>Loopback - readonly_user</name>
+        <password>PWTDIe2ImgsIqomRuPV85Q==</password>
+        <sys_class_name>sys_auth_profile_basic</sys_class_name>
+        <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+        <sys_created_on>2018-03-15 07:43:38</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>db5f2d66dbb05b0012b2f00fbf9619ed</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Loopback - readonly_user</sys_name>
+        <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+        <sys_update_name>sys_auth_profile_basic_db5f2d66dbb05b0012b2f00fbf9619ed</sys_update_name>
+        <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+        <sys_updated_on>2018-03-17 21:38:48</sys_updated_on>
+        <username>readonly_user</username>
+    </sys_auth_profile_basic>
+</record_update>

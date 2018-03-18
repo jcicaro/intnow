@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_related sys_domain="global" table="x_9260_intnow_record_update_request" version="2" view="">
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Record Update Request - Default view" name="x_9260_intnow_record_update_request" related_list="NULL" sys_domain="global" view="Default view">249db731db3cd70012b2f00fbf96191f</list_id>
+            <order_by/>
+            <position>0</position>
+            <related_list>x_9260_intnow_record_update.record_update_request</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-13 10:09:20</sys_created_on>
+            <sys_id>609db731db3cd70012b2f00fbf961920</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-13 10:09:20</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list action="INSERT_OR_UPDATE">
+            <calculated_name>Record Update Request - Default view</calculated_name>
+            <filter/>
+            <name>x_9260_intnow_record_update_request</name>
+            <order_by/>
+            <position/>
+            <related_list/>
+            <sys_class_name>sys_ui_related_list</sys_class_name>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-13 10:09:20</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>249db731db3cd70012b2f00fbf96191f</sys_id>
+            <sys_mod_count>3</sys_mod_count>
+            <sys_name>Record Update Request - Default view</sys_name>
+            <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+            <sys_update_name>sys_ui_related_x_9260_intnow_record_update_request_null</sys_update_name>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 20:21:19</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_related_list>
+    </sys_ui_related>
+</record_update>

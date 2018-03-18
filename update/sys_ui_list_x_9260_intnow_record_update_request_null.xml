@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_list parent="" relationship="" sys_domain="global" table="x_9260_intnow_record_update_request" version="2" view="">
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>display_name</element>
+            <list_id display_value="x_9260_intnow_record_update_request" element="NULL" name="x_9260_intnow_record_update_request" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae46a28fdb789b0012b2f00fbf961918</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>0</position>
+            <sum>false</sum>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 01:00:23</sys_created_on>
+            <sys_id>aa46668fdb789b0012b2f00fbf96191c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 01:00:23</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>table</element>
+            <list_id display_value="x_9260_intnow_record_update_request" element="NULL" name="x_9260_intnow_record_update_request" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae46a28fdb789b0012b2f00fbf961918</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>1</position>
+            <sum>false</sum>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 01:00:23</sys_created_on>
+            <sys_id>2246668fdb789b0012b2f00fbf96191d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 01:00:23</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>record</element>
+            <list_id display_value="x_9260_intnow_record_update_request" element="NULL" name="x_9260_intnow_record_update_request" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae46a28fdb789b0012b2f00fbf961918</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>2</position>
+            <sum>false</sum>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 01:00:23</sys_created_on>
+            <sys_id>a246668fdb789b0012b2f00fbf96191d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 01:00:23</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>state</element>
+            <list_id display_value="x_9260_intnow_record_update_request" element="NULL" name="x_9260_intnow_record_update_request" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae46a28fdb789b0012b2f00fbf961918</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>3</position>
+            <sum>false</sum>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 01:00:23</sys_created_on>
+            <sys_id>2646668fdb789b0012b2f00fbf96191d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 01:00:23</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>sys_created_on</element>
+            <list_id display_value="x_9260_intnow_record_update_request" element="NULL" name="x_9260_intnow_record_update_request" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">ae46a28fdb789b0012b2f00fbf961918</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>4</position>
+            <sum>false</sum>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 01:00:23</sys_created_on>
+            <sys_id>a646668fdb789b0012b2f00fbf96191d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 01:00:23</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element/>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <name>x_9260_intnow_record_update_request</name>
+            <parent/>
+            <position/>
+            <relationship/>
+            <sum>false</sum>
+            <sys_class_name>sys_ui_list</sys_class_name>
+            <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+            <sys_created_on>2018-03-17 01:00:23</sys_created_on>
+            <sys_customer_update>false</sys_customer_update>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>ae46a28fdb789b0012b2f00fbf961918</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_9260_intnow_record_update_request</sys_name>
+            <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+            <sys_policy/>
+            <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+            <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+            <sys_update_name>sys_ui_list_x_9260_intnow_record_update_request_null</sys_update_name>
+            <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+            <sys_updated_on>2018-03-17 01:00:23</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_list>
+    </sys_ui_list>
+</record_update>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="HTTP Request" max_length="40" name="x_9260_intnow_http_request" type="collection">
+        <element label="Endpoint" max_length="1024" name="endpoint" type="url"/>
+        <element label="HTTP request body" max_length="10000" name="http_request_body" type="string"/>
+        <element label="HTTP response body" max_length="10000" name="http_response_body" type="string"/>
+        <element label="HTTP status code" max_length="40" name="http_status_code" type="string"/>
+        <element display="true" label="State" max_length="40" name="state" type="string"/>
+        <element label="WS message" max_length="32" name="ws_message" reference="sys_metadata" reference_qual="sys_class_name=sys_rest_message^ORsys_class_name=sys_soap_message^EQ" reference_qual_condition="sys_class_name=sys_rest_message^ORsys_class_name=sys_soap_message^EQ" type="reference"/>
+        <element label="WS method" max_length="32" name="ws_method" reference="sys_metadata" reference_qual="javascript:new getWebServiceFunctionsRefQual().getFunctions(current.ws_message.sys_id, current.ws_message.sys_class_name)" type="reference" use_reference_qualifier="advanced"/>
+        <index name="index">
+            <element name="ws_message"/>
+        </index>
+        <index name="index2">
+            <element name="ws_method"/>
+        </index>
+    </element>
+</database>

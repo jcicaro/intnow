@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_rest_message_fn_headers">
+    <sys_rest_message_fn_headers action="INSERT_OR_UPDATE">
+        <name>Content-type</name>
+        <rest_message_function display_value="Issue POST">89dabcdedbb41b0012b2f00fbf96194c</rest_message_function>
+        <sys_class_name>sys_rest_message_fn_headers</sys_class_name>
+        <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+        <sys_created_on>2018-03-14 09:18:57</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>834b3052dbf41b0012b2f00fbf96195b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Content-type</sys_name>
+        <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+        <sys_update_name>sys_rest_message_fn_headers_834b3052dbf41b0012b2f00fbf96195b</sys_update_name>
+        <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+        <sys_updated_on>2018-03-14 09:18:57</sys_updated_on>
+        <value>application/json</value>
+    </sys_rest_message_fn_headers>
+</record_update>

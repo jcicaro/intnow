@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_9260_intnow.JiraUtil</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>JiraUtil</name>
+        <script><![CDATA[var JiraUtil = Class.create();
+JiraUtil.prototype = {
+
+	initialize: function () {
+		this.scope = 'x_pacu_jira_wh';
+		this.rest_message_outbound_name = this.scope + '.(ND) JIRA Issue';
+
+		this.jira_base_url = 'http://104.168.134.131:9090'; // Jira - Dev
+
+		// Dev Details
+		// this.jira_base_url = 'http://104.168.134.131:9090';
+		// this.basic_auth_profile_id = '81af49544fbc5b00c24f461f0310c7c7'; // sys_auth_profile_basic : Jira - Dev
+
+		this.resolved_state = '2'; // what the state should be when vendor resolves a ticket, set to In Progress
+		this.open_state = '3'; // what the state should be when a ticket is with the vendor, set to On Hold | Awaiting Vendor
+		this.canceled_state = '2'; // what the state should be when the vendor ticket is cancelled, should be set to In Progress
+		this.vendor_canceled_state = '10304';
+		this.journal_field = 'work_notes';
+
+		this.resolved_state_actual = '6'; // the actual Resolved state on the Incident
+
+		// this is the username of the service account user on Jira
+		this.jira_service_account_name = 'support'; // 'support@ndnco.com.au'; 
+
+		this.update_ticket_enabled = true;
+		this.debug_mode = true;
+
+		// Utils
+		this.INTUTIL = new IntegrateNowUtil();
+
+	},
+
+	// ======================================= Jira Issue =======================================
+
+	getJiraIssue: function (issueKey) {
+
+		try {
+			var r = new sn_ws.RESTMessageV2(this.rest_message_outbound_name, 'Issue GET');
+
+			if (this.basic_auth_profile_id) {
+				r.setAuthenticationProfile('basic', this.basic_auth_profile_id);
+			}
+
+			r.setStringParameter("jira_base_url", this.jira_base_url);
+			r.setStringParameter("issue_key", issueKey);
+
+			var response = r.execute();
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+
+			responseBody = JSON.parse(responseBody);
+
+			return responseBody;
+
+		} catch (error) {
+			this.log(error, 'error');
+		}
+
+	},
+
+
+	getJiraCommentVisibility: function (commentId) {
+		try {
+
+			var r = new sn_ws.RESTMessageV2(this.rest_message_outbound_name, 'Comment Visibility - GET');
+
+			if (this.basic_auth_profile_id) {
+				r.setAuthenticationProfile('basic', this.basic_auth_profile_id);
+			}
+
+			r.setStringParameter("jira_base_url", this.jira_base_url);
+			r.setStringParameter("comment_id", commentId);
+
+			var response = r.execute();
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+
+			responseBody = JSON.parse(responseBody);
+
+			return responseBody;
+
+		} catch (error) {
+			this.log(error, 'error');
+		}
+	},
+
+	getJiraComment: function (issueKey, commentId) {
+
+		try {
+			var r = new sn_ws.RESTMessageV2(this.rest_message_outbound_name, 'Comment GET');
+
+			if (this.basic_auth_profile_id) {
+				r.setAuthenticationProfile('basic', this.basic_auth_profile_id);
+			}
+
+			r.setStringParameter("jira_base_url", this.jira_base_url);
+			r.setStringParameter("issue_key", issueKey);
+			r.setStringParameter("comment_id", commentId);
+
+			var response = r.execute();
+			var responseBody = response.getBody();
+			var httpStatus = response.getStatusCode();
+
+			responseBody = JSON.parse(responseBody);
+
+			return responseBody;
+
+		} catch (error) {
+			this.log(error, 'error');
+		}
+
+	},
+
+	// ======================================= ServiceNow Ticket =======================================
+
+	fetchRecordGr: function (table, keyValuePairs) {
+		var gr = new GlideRecord(table);
+		keyValuePairs.forEach(function (kvpair) {
+			gr.addQuery(kvpair.key, kvpair.value);
+		});
+		gr.query();
+		return gr;
+	},
+
+	addCommentToTicket: function (issueKey, commentId) {
+		var util = this;
+
+		try {
+
+			var commentVisResp = util.getJiraCommentVisibility(commentId);
+			util.log(commentVisResp);
+			if (commentVisResp && commentVisResp.value) {
+				if (commentVisResp.value.internal == true) {
+					return null; // do nothing if internal only
+				}
+			}
+
+			var commentResp = util.getJiraComment(issueKey, commentId);
+			if (!commentResp) {
+				return null;
+			} // exit
+
+			util.log(commentResp);
+
+			var authorName = util._fetchCommentAuthorName(commentResp);
+			if (authorName && authorName === this.jira_service_account_name) {
+				util.log('Comments originally added by integration user. No new comment to add.');
+				return null;
+			}
+
+			// util.log(comment);
+
+			var author = this._fetchCommentAuthorDisplayName(commentResp);
+
+			var recordGr = util.fetchRecordGr('incident', [{
+				key: 'vendor_ticket',
+				value: issueKey
+			}]);
+			while (recordGr.next()) {
+				var update = {};
+				var detailedComment = this._addVendorCommentPrefix(commentResp.body, recordGr);
+				update[this.journal_field] = detailedComment;
+				util._updateRelatedTicket(recordGr, update);
+			}
+		} catch (error) {
+			this.log(error);
+		}
+
+	},
+
+	processTicketUpdate: function (issueKey) {
+		var util = this;
+
+		try {
+
+			util.log('Jira Issue Updated: ' + issueKey);
+
+			var jiraResp = util.getJiraIssue(issueKey);
+
+			// util.log(jiraResp);
+
+			var vendorState = jiraResp.fields.status.id;
+			util.log('Vendor state: ' + vendorState);
+
+			var ticketGr = util.fetchRecordGr('incident', [{
+				key: 'vendor_ticket',
+				value: issueKey
+			}]);
+			while (ticketGr.next()) {
+				util.log('Ticket to update: ' + ticketGr.getDisplayValue());
+
+				// If vendor ticket is cancelled, revert back to the normal In Progress state then exit
+				if (vendorState === this.vendor_canceled_state) {
+					util.cancelVendorTicket(ticketGr, this.canceled_state, jiraResp);
+					return null; // exit
+				}
+
+				var updates = util._fetchUpdatesRequired(ticketGr, jiraResp);
+				util.log('updates: ' + JSON.stringify(updates));
+
+				if (!updates) {
+					return null;
+				} // exit
+
+				// Vendor resolution, set to In Progress
+				if (updates.state === this.resolved_state) {
+					util.resolveRelatedTicket(ticketGr, updates.state, jiraResp);
+				}
+
+				// Still with the vendor, On Hold | Awaiting Vendor
+				else if (updates.state === this.open_state) {
+					util.reopenRelatedTicket(ticketGr, updates.state, jiraResp);
+				}
+			}
+
+		} catch (error) {
+			util.log(error, 'error');
+		}
+	},
+
+	cancelVendorTicket: function (ticketGr, state, jiraResp) {
+		this.log('Ticket cancelled by vendor: ' + ticketGr.getDisplayValue() + ' -- new state: ' + state);
+
+		var comments = [];
+
+		var vendorAssignee = this._fetchIssueAssignee(jiraResp);
+		if (vendorAssignee) {
+			// comments.push('Assigned to: ' + vendorAssignee);
+		}
+
+		var mainMessage = "Vendor ticket has been cancelled by " + ticketGr.vendor.name + '.';
+		// comments.push(this._addVendorCommentPrefix(mainMessage, ticketGr));
+		comments.push(mainMessage);
+
+		var resolution = this._fetchResolution(jiraResp);
+		if (resolution) {
+			comments.push('Resolution: ' + resolution);
+		}
+
+		var lastComment = this._fetchLastVendorComment(jiraResp);
+		if (lastComment) {
+			// lastComment = this._addVendorCommentPrefix(lastComment, ticketGr);
+			comments.push('Additional comments: ' + lastComment);
+		}
+		ticketGr[this.journal_field] = this._addVendorCommentPrefix(comments.join('\n\n'), ticketGr);
+		if (this.update_ticket_enabled) {
+			ticketGr.update(); // Update the comments first so that we still have the vendor ticket info
+		}
+
+
+		// Clear the vendor ticket info
+		if (ticketGr.active == true &&
+			ticketGr.getValue('state') !== this.resolved_state_actual) {
+			ticketGr.state = state;
+		}
+		ticketGr.vendor_resolved_at = '';
+		ticketGr.vendor = '';
+		ticketGr.vendor_ticket = '';
+		ticketGr.vendor_point_of_contact = '';
+		ticketGr.vendor_opened_at = '';
+		ticketGr.vendor_resolved_at = '';
+		ticketGr.vendor_closed_at = '';
+		ticketGr.correlation_id = '';
+		ticketGr.correlation_display = '';
+		if (this.update_ticket_enabled) {
+			ticketGr.update();
+		}
+
+		return ticketGr;
+	},
+
+	reopenRelatedTicket: function (ticketGr, state, jiraResp) {
+		this.log('Ticket reopened by vendor: ' + ticketGr.getDisplayValue() + ' -- new state: ' + state);
+
+		var vendorAssignee = this._fetchIssueAssignee(jiraResp);
+		var comment = "Vendor ticket has been reopened by " + ticketGr.vendor.name + '.';
+
+		var lastComment = this._fetchLastVendorComment(jiraResp);
+		if (lastComment) {
+			lastComment = this._addVendorCommentPrefix(lastComment, ticketGr);
+			comment += '\n\n' + lastComment;
+		}
+
+		if (ticketGr.active == true) {
+			ticketGr.state = state;
+			ticketGr.hold_reason = '4'; // Awaiting Vendor
+		}
+		ticketGr.vendor_resolved_at = '';
+		ticketGr[this.journal_field] = this._addVendorCommentPrefix(comment, ticketGr); // comment;
+		if (this.update_ticket_enabled) {
+			ticketGr.update();
+		}
+
+		return ticketGr;
+	},
+
+	resolveRelatedTicket: function (ticketGr, state, jiraResp) {
+
+		this.log('Ticket resolved by vendor: ' + ticketGr.getDisplayValue() + ' -- new state: ' + state);
+
+		var comments = [];
+
+		var mainMessage = "Vendor ticket has been resolved by " + ticketGr.vendor.name + '.';
+		comments.push(mainMessage);
+
+		var vendorAssignee = this._fetchIssueAssignee(jiraResp);
+		if (vendorAssignee) {
+			// comments.push('Assigned to: ' + vendorAssignee);
+		}
+
+		var resolution = this._fetchResolution(jiraResp);
+		if (resolution) {
+			comments.push('Resolution: ' + resolution);
+		}
+
+		var lastComment = this._fetchLastVendorComment(jiraResp);
+		if (lastComment) {
+			// lastComment = this._addVendorCommentPrefix(lastComment, ticketGr);
+			comments.push(lastComment);
+		}
+
+		if (ticketGr.active == true &&
+			ticketGr.getValue('state') !== this.resolved_state_actual) {
+			ticketGr.state = state;
+			ticketGr.hold_reason = null;
+		}
+
+		ticketGr.vendor_resolved_at = new GlideDateTime();
+		ticketGr[this.journal_field] = this._addVendorCommentPrefix(comments.join('\n\n'), ticketGr); //comments.join('\n\n');
+		if (this.update_ticket_enabled) {
+			ticketGr.update();
+		}
+
+		return ticketGr;
+	},
+
+	// ================================ States ================================
+
+	// eg. key='u_vendor_state', value='6'; will return { u_vendor_state: 'N', u_state: 'N' } 
+	fetchFieldMap: function (key, value) {
+		value = value ? value + '' : '';
+		var fieldMaps = [{
+			u_vendor_state: '1', // Open
+			u_state: this.open_state
+		},
+		{
+			u_vendor_state: '3', // In Progress
+			u_state: this.open_state
+		},
+		{
+			u_vendor_state: '4', // Reopened
+			u_state: this.open_state
+		},
+		{
+			u_vendor_state: '5', // Resolved
+			u_state: this.resolved_state
+		},
+		{
+			u_vendor_state: '6', // Closed
+			u_state: this.resolved_state
+		},
+		{
+			u_vendor_state: '10000', // To do
+			u_state: this.open_state
+		},
+		{
+			u_vendor_state: '10001', // Done
+			u_state: this.resolved_state
+		},
+		// Service Desk
+		{
+			u_vendor_state: '10006', // Canceled
+			u_state: this.canceled_state
+		},
+		{
+			u_vendor_state: '10304', // Canceled (SD)
+			u_state: this.canceled_state
+		},
+		{
+			u_vendor_state: '10005', // Pending
+			u_state: this.open_state
+		},
+		{
+			u_vendor_state: '10015', // Resolved (SD)
+			u_state: this.resolved_state
+		},
+		{
+			u_vendor_state: '10313', // Completed (SD)
+			u_state: this.resolved_state
+		},
+		{
+			u_vendor_state: '10014', // Work in Progress (SD)
+			u_state: this.open_state
+		},
+		];
+
+		var result = fieldMaps.filter(function (fm) {
+			return fm[key] === value;
+		});
+
+		if (result.length > 0) {
+			return result[0];
+		}
+
+		return null;
+	},
+
+
+
+	log: function (msg, logType) {
+		if (this.debug === false) {
+			return null;
+		} // exit
+
+		logType = logType || 'info';
+
+		if (!msg) {
+			gs.error(msg + '');
+			return null;
+		}
+
+		if (typeof msg === 'object' || this.INTUTIL.isArray(msg)) {
+			msg = JSON.stringify(msg);
+		}
+
+		gs[logType](msg);
+	},
+
+	// ========================================= HELPERS =========================================
+
+	_updateRelatedTicket: function (ticketGr, keyValuePairs) {
+		this.log('Updating: ' + ticketGr.getDisplayValue());
+		this.log(keyValuePairs);
+
+		for (var i in keyValuePairs) {
+			if (keyValuePairs.hasOwnProperty(i)) {
+				ticketGr[i] = keyValuePairs[i];
+			}
+		}
+
+		if (this.update_ticket_enabled) {
+			ticketGr.update();
+		}
+	},
+
+	_fetchUpdatesRequired: function (ticketGr, jiraResponse) {
+		try {
+
+			var updates = {};
+			var isUpdateRequired = false;
+
+			var vendorState = jiraResponse.fields.status.id;
+			var fieldMap = this.fetchFieldMap('u_vendor_state', vendorState);
+			var ticketState = ticketGr.getValue('state');
+
+			this.log('Mapped vendor state: ' + fieldMap.u_state + ' ; ' + ticketGr.getDisplayValue() + ' state: ' + ticketState);
+
+			if (fieldMap && fieldMap.u_state !== ticketState) {
+				updates.state = fieldMap.u_state;
+				isUpdateRequired = true;
+			}
+
+			if (isUpdateRequired) {
+				return updates;
+			}
+
+		} catch (error) {
+			this.log(error, 'error');
+		}
+
+		return false; // no update required
+	},
+
+	_fetchResolution: function (jiraResp) {
+		try {
+			var resolution = jiraResp && jiraResp.fields && jiraResp.fields.resolution ?
+				jiraResp.fields.resolution.description : '';
+			return resolution;
+		} catch (error) {
+			this.log(error, 'error');
+		}
+		return '';
+	},
+
+	_fetchIssueAssignee: function (jiraResp) {
+		try {
+			var assignee = jiraResp && jiraResp.fields && jiraResp.fields.assignee ?
+				jiraResp.fields.assignee.displayName + ' (' + jiraResp.fields.assignee.emailAddress + ')' : '';
+			return assignee;
+		} catch (error) {
+			this.log(error, 'error');
+		}
+		return '';
+	},
+
+	_fetchCommentAuthorName: function (jiraResp) {
+		try {
+
+			var author = jiraResp && jiraResp.updateAuthor ?
+				jiraResp.updateAuthor.name : '';
+			return author;
+
+		} catch (error) {
+			this.log(error, 'error');
+		}
+
+		return '';
+	},
+
+	_fetchCommentAuthorDisplayName: function (jiraResp) {
+		try {
+
+			var author = jiraResp && jiraResp.updateAuthor ?
+				jiraResp.updateAuthor.displayName + ' (' + jiraResp.updateAuthor.emailAddress + ')' : '';
+			return author;
+
+		} catch (error) {
+			this.log(error, 'error');
+		}
+
+		return '';
+	},
+
+	_fetchLastVendorComment: function (jiraResp) {
+		try {
+
+			var comment = jiraResp && jiraResp.fields && jiraResp.fields.comment && this.INTUTIL.isArray(jiraResp.fields.comment.comments) ?
+				jiraResp.fields.comment.comments[jiraResp.fields.comment.comments.length - 1].body : '';
+			return comment;
+
+		} catch (error) {
+			this.log(error, 'error');
+		}
+
+		return '';
+	},
+
+	_addVendorCommentPrefix: function (comment, ticketGr) {
+		var prefixedComment = ticketGr.vendor ? "Vendor Update: (" + ticketGr.vendor.name + "): " : "Vendor Update: ";
+		prefixedComment += this.INTUTIL.removeHTMLTags(comment);
+		return prefixedComment;
+	},
+
+	type: 'JiraUtil'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>xJuanCarlo.Icaro</sys_created_by>
+        <sys_created_on>2018-03-14 08:50:54</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>d525701edbb41b0012b2f00fbf96196b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>JiraUtil</sys_name>
+        <sys_package display_value="IntegrateNow" source="x_9260_intnow">00853739dbf8d70012b2f00fbf9619a0</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="IntegrateNow">00853739dbf8d70012b2f00fbf9619a0</sys_scope>
+        <sys_update_name>sys_script_include_d525701edbb41b0012b2f00fbf96196b</sys_update_name>
+        <sys_updated_by>xJuanCarlo.Icaro</sys_updated_by>
+        <sys_updated_on>2018-03-14 09:00:04</sys_updated_on>
+    </sys_script_include>
+</record_update>
